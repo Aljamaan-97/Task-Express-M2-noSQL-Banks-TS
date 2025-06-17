@@ -1,12 +1,25 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import accountsRouter from "./api/accounts/accounts.routes";
+import notfound from "./middlewares/handlenotfound";
+import errorhandle from "./middlewares/errorhandler";
+import cors from "cors";
+import moragn from "morgan";
 
 const app = express();
-const PORT = 8000;
-
 app.use(express.json());
-app.use("/accounts", accountsRouter);
+app.use(cors());
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   console.log(
+//     `hello ahmed you got a request of type ${req.method} request for '${
+//       req.path
+//     }' at ${new Date().toISOString()} from ${req.ip}`
+//   );
+//   next();
+// });
+app.use(moragn("dev"));
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+app.use("/accounts", accountsRouter);
+// app.use(errorhandle);
+// app.use(notfound);
+
+export default app;
